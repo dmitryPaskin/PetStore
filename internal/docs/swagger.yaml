@@ -1,0 +1,356 @@
+definitions:
+  entities.Category:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  entities.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  entities.Pet:
+    properties:
+      category:
+        $ref: '#/definitions/entities.Category'
+      id:
+        type: integer
+      name:
+        type: string
+      status:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/entities.Tag'
+        type: array
+    type: object
+  entities.Store:
+    properties:
+      complete:
+        type: boolean
+      id:
+        type: integer
+      petId:
+        type: integer
+      shipDate:
+        type: string
+      status:
+        type: string
+    type: object
+  entities.Tag:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  entities.User:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      lastName:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      userStatus:
+        type: integer
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /pet:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Pet object that needs to be added to the store
+        in: body
+        name: pet
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Pet'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Pet object that was added
+          schema:
+            $ref: '#/definitions/entities.Pet'
+      security:
+      - ApiKeyAuth: []
+      summary: Add a new pet to the store
+      tags:
+      - pet
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Pet object that needs to update
+        in: body
+        name: pet
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Pet'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Pet updated
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update a pet in the store with form data
+      tags:
+      - pet
+  /pet/{petId}:
+    delete:
+      parameters:
+      - description: ID of pet to delete
+        in: path
+        name: petId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Pet deleted
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a pet by ID
+      tags:
+      - pet
+    get:
+      parameters:
+      - description: ID of pet to return
+        in: path
+        name: petId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Find pet by ID
+          schema:
+            $ref: '#/definitions/entities.Pet'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a pet by ID
+      tags:
+      - pet
+  /pet/findByStatus:
+    get:
+      parameters:
+      - description: Status values that need to be considered for filter
+        in: query
+        name: status
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Pets found by status
+          schema:
+            items:
+              $ref: '#/definitions/entities.Pet'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a pet by ID
+      tags:
+      - pet
+  /store/order:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Order object that needs to be added to the store
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Store'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order object that was added
+          schema:
+            $ref: '#/definitions/entities.Store'
+      security:
+      - ApiKeyAuth: []
+      summary: Add a new order to the store
+      tags:
+      - store
+  /store/order/{orderId}:
+    delete:
+      parameters:
+      - description: ID of order to delete
+        in: path
+        name: orderId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order deleted
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete order by ID
+      tags:
+      - store
+    get:
+      parameters:
+      - description: ID of order to return
+        in: path
+        name: orderId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Find order by ID
+          schema:
+            $ref: '#/definitions/entities.Store'
+      security:
+      - ApiKeyAuth: []
+      summary: Order an order by ID
+      tags:
+      - store
+  /user/{username}:
+    delete:
+      parameters:
+      - description: Username of user to delete
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User deleted
+          schema:
+            type: string
+      summary: Delete a user by username
+      tags:
+      - user
+    get:
+      parameters:
+      - description: Username of user to return
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Find user by username
+          schema:
+            $ref: '#/definitions/entities.User'
+      summary: Get user by username
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User object that needs to update
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entities.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated
+          schema:
+            type: string
+      summary: Update a user with form data
+      tags:
+      - user
+  /user/createWithList:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Users to add to the store
+        in: body
+        name: users
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/entities.User'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Users created
+          schema:
+            type: string
+      summary: Create a list of new users
+      tags:
+      - user
+  /user/login:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/entities.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User login
+          schema:
+            type: string
+      summary: Login a user
+      tags:
+      - user
+  /user/logout:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User logout
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Logout a user
+      tags:
+      - user
+swagger: "2.0"
